@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block menu %}
+
+
+{% if user.is_authenticated %}
+    <span>Ваш логин: <b>{{ user.username }}</b></span>
+{% else %}
+    <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if foodgroups %}<br/>
+    <h3>Наиболее популярные категории продуктов</h3><br/>
+    {% for group in foodgroups %}
+        <span>
+            <a href="{% url 'product_category' group.pk %}">
+                <button type="button" class="btn btn-outline-success">{{ group.name }}</button>
+            </a>
+        </span>
+
+    {% endfor %}
+{% endif %} <br/><br/>
+
+<h3>Все заведения:</h3><br/>
+    {% for partner in partners %}
+
+            <p> <br/>
+                <a href="{% url 'profile' partner.pk %}">
+                    <img src="{{ partner.avatar.url }}" height="auto" width="500"> <br/>
+                    {{ partner.username }}
+                </a>
+            </p>
+    {% empty %}
+    <p>Список пользователей отсутствует!</p>
+    {% endfor %}
+
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block menu %}
+
+{% if profile_owner.id == user.id %}
+    <a class="btn btn-primary" href="{% url 'change_password' profile_owner.pk %}">Сменить пароль</a>
+    {% if profile_owner.user_type == 'clients' %}
+        <a class="btn btn-primary" href="{% url 'client_update' profile_owner.pk %}">Изменить личные данные</a>
+    {% else %}
+        <a class="btn btn-primary" href="{% url 'partner_update' profile_owner.pk %}">Изменить личные данные</a>
+        <a class="btn btn-primary" href="{% url 'add_product' %}">Добавить продукт</a> &nbsp
+    {% endif %}
+
+{% endif %}
+
+{% if user.is_authenticated %}
+    <span>Ваш логин: {{ user.username }}</span>
+{% else %}
+    <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+<br/> <br/>
+
+{% if profile_owner.user_type == 'partners' %}
+    <img src="{{ profile_owner.avatar.url }}" height="auto" width="500">
+{% endif %}
+
+<h3>Название заведения: {{ profile_owner.username }}</h3> <br/> <br/>
+
+{% if profile_owner.user_type == 'partners' %}
+
+<p>
+    <span> <b> Виды продуктов : </b> </span>
+
+    <span>
+            <a href="{% url 'profile' profile_owner.pk %}">
+                <button type="button" class="btn btn-outline-success">Все типы</button>
+            </a>
+    </span>
+
+    {% for groupa in profile_owner.partner_groups.all %}
+
+        <span>
+            <a href="{% url 'profile' profile_owner.pk groupa.pk %}">
+                <button type="button" class="btn btn-outline-success">{{ groupa.name }}</button>
+            </a>
+        </span>
+
+    {% endfor %}
+</p>
+
+    <h2> Ассортимент </h2>
+
+    {% if profile_owner.partner_products.count > 0 %}
+        {% for product in profile_owner.partner_products.all %}
+            {% if product.groupa_id == id_groupa or id_groupa == 0 %}
+                <a href="{% url 'detail_product' product.pk %}">
+                    <img src="{{ product.image.url }}" height="200" width="300">
+                    <p>Наименование: {{ product.name }}</p>
+                    <p>Цена: {{ product.price }} KZT</p>
+                </a>
+                {% if user.is_authenticated %}
+                <p>
+                    <a href="{% url 'detail_product' product.pk %}">
+                        <button type="button" class="btn btn-outline-primary">Сделать заказ</button>
+                    </a>
+                </p><br/>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>Ассортимент пуст</p>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
+
+<!--            {% if product.at_partner.id == profile_owner.id %}-->
+<!--            {% endif %}-->
+
+
+<!--{% if profile_owner == user_type.partners %}-->
+<!--    <a class="btn btn-primary" href="{% url 'avatar_update' profile_owner.pk %}"> Редактировать профайл </a>-->
+<!--{% endif %}-->
+
+<!--<a class="btn btn-primary" href="{% url 'password_update' profile_owner.pk %}"> Сменить пароль </a>-->

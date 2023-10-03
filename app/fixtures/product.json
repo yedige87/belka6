@@ -1,0 +1,1649 @@
+[
+{
+  "model": "product.grouping",
+  "pk": 1,
+  "fields": {
+    "name": "Бургеры",
+    "at_partner": [
+      3,
+      9,
+      10,
+      11,
+      2
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 2,
+  "fields": {
+    "name": "Донеры",
+    "at_partner": [
+      2,
+      6,
+      7,
+      8
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 3,
+  "fields": {
+    "name": "Пиццы",
+    "at_partner": [
+      3,
+      5,
+      11,
+      12,
+      13,
+      14
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 4,
+  "fields": {
+    "name": "Напитки",
+    "at_partner": [
+      2,
+      3,
+      11,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      13,
+      14
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 5,
+  "fields": {
+    "name": "Гарниры",
+    "at_partner": [
+      3,
+      7,
+      8,
+      10
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 6,
+  "fields": {
+    "name": "Соусы",
+    "at_partner": [
+      3,
+      6,
+      7
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 7,
+  "fields": {
+    "name": "Салаты",
+    "at_partner": [
+      5,
+      9,
+      12,
+      14
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 8,
+  "fields": {
+    "name": "Сэндвичи",
+    "at_partner": [
+      8,
+      11,
+      2
+    ]
+  }
+},
+{
+  "model": "product.grouping",
+  "pk": 9,
+  "fields": {
+    "name": "Выпечка",
+    "at_partner": [
+      2
+    ]
+  }
+},
+{
+  "model": "product.product",
+  "pk": 1,
+  "fields": {
+    "name": "Донер",
+    "price": "800.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner1_W3JAJ7h.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 2,
+  "fields": {
+    "name": "Донер полтора",
+    "price": "1200.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner2.webp",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 3,
+  "fields": {
+    "name": "Донер куринный",
+    "price": "700.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner3.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 4,
+  "fields": {
+    "name": "Донер куринный полтора",
+    "price": "1200.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner4.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 5,
+  "fields": {
+    "name": "Самса уйгурская",
+    "price": "350.00",
+    "category": "fastfood",
+    "groupa": 9,
+    "image": "images/samsa_uigurskaya.webp",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 6,
+  "fields": {
+    "name": "Самса с курицей",
+    "price": "250.00",
+    "category": "fastfood",
+    "groupa": 9,
+    "image": "images/samsa_chiken.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 7,
+  "fields": {
+    "name": "Cola",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 8,
+  "fields": {
+    "name": "Fanta",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_fanta.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 9,
+  "fields": {
+    "name": "Sprite",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_sprite.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 10,
+  "fields": {
+    "name": "Бургер куринный",
+    "price": "1600.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_chicken.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 11,
+  "fields": {
+    "name": "Бургер Double Halapenjo",
+    "price": "1800.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_double.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 12,
+  "fields": {
+    "name": "Бургер Black",
+    "price": "2000.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_black.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 13,
+  "fields": {
+    "name": "Бургеры вегетерианский",
+    "price": "1700.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_vegan.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 14,
+  "fields": {
+    "name": "Cola",
+    "price": "170.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola_15a2seL.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 15,
+  "fields": {
+    "name": "Fanta",
+    "price": "170.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_fanta_LTd02OA.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 16,
+  "fields": {
+    "name": "Sprite",
+    "price": "170.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_sprite_ASCBELp.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 17,
+  "fields": {
+    "name": "Pepsi",
+    "price": "170.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_pepsi.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 18,
+  "fields": {
+    "name": "Lipton",
+    "price": "180.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_lipton.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 19,
+  "fields": {
+    "name": "Фри",
+    "price": "350.00",
+    "category": "fastfood",
+    "groupa": 5,
+    "image": "images/garnir_free2.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 20,
+  "fields": {
+    "name": "Наггетсы",
+    "price": "500.00",
+    "category": "fastfood",
+    "groupa": 5,
+    "image": "images/garnir_naggets.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 21,
+  "fields": {
+    "name": "Пицца Пепперони",
+    "price": "2500.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_pepperoni.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 22,
+  "fields": {
+    "name": "Пицца Маргарита",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_margarita.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 23,
+  "fields": {
+    "name": "Пицца Маргарита",
+    "price": "1800.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_margarita_z8bMJTD.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 24,
+  "fields": {
+    "name": "Пицца Пепперони",
+    "price": "2000.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_pepperoni_7awcNfM.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 25,
+  "fields": {
+    "name": "Пицца Моцарелла",
+    "price": "2500.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_mozzarella.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 26,
+  "fields": {
+    "name": "Пицца Салями",
+    "price": "1700.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_salyami.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 27,
+  "fields": {
+    "name": "Пицца с морепродуктами",
+    "price": "2150.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_siciliana.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 28,
+  "fields": {
+    "name": "Салат Цезарь",
+    "price": "900.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/salad_caesar.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 29,
+  "fields": {
+    "name": "Салат кукурузный",
+    "price": "650.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/salad_corn.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 30,
+  "fields": {
+    "name": "Cola",
+    "price": "185.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola_L4SDlcC.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 31,
+  "fields": {
+    "name": "Fanta",
+    "price": "185.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_fanta_DMDBDfd.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 32,
+  "fields": {
+    "name": "Sprite",
+    "price": "185.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_sprite_66W7Wvs.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 33,
+  "fields": {
+    "name": "Сок апельсиновый",
+    "price": "800.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_orange_juice.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 34,
+  "fields": {
+    "name": "Лимонад",
+    "price": "1300.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_mohito.jpeg",
+    "partner": 5
+  }
+},
+{
+  "model": "product.product",
+  "pk": 35,
+  "fields": {
+    "name": "Соус чесночный",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_garlic.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 36,
+  "fields": {
+    "name": "Соус сырный",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_cheese.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 37,
+  "fields": {
+    "name": "Соус майонез",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_mayonese.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 38,
+  "fields": {
+    "name": "Соус томатный",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_tomato.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 39,
+  "fields": {
+    "name": "Соус барбекью",
+    "price": "150.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_barbeque.jpeg",
+    "partner": 3
+  }
+},
+{
+  "model": "product.product",
+  "pk": 40,
+  "fields": {
+    "name": "Донер говяжий",
+    "price": "950.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner3_NjewNcx.jpeg",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 41,
+  "fields": {
+    "name": "Донер куринный",
+    "price": "800.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner2_DY54F7h.webp",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 42,
+  "fields": {
+    "name": "Донер куринный полтора",
+    "price": "1300.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner4_vgM9Tu5.jpeg",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 43,
+  "fields": {
+    "name": "Донер полтора",
+    "price": "1900.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner1_wyTj7I9.jpeg",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 44,
+  "fields": {
+    "name": "Cola",
+    "price": "200.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola_9INmdov.jpeg",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 45,
+  "fields": {
+    "name": "Fanta",
+    "price": "200.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_fanta_XIOH471.jpeg",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 46,
+  "fields": {
+    "name": "Соус сырный",
+    "price": "250.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_cheese_OoHfdF1.jpeg",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 47,
+  "fields": {
+    "name": "Соус чесночный",
+    "price": "230.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_garlic_dnvlMU0.jpeg",
+    "partner": 6
+  }
+},
+{
+  "model": "product.product",
+  "pk": 48,
+  "fields": {
+    "name": "Донер говяжий",
+    "price": "950.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner1_QhumAQU.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 49,
+  "fields": {
+    "name": "Донер куринный",
+    "price": "900.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner2_6bz162v.webp",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 50,
+  "fields": {
+    "name": "Донер куринный полтора",
+    "price": "1900.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner3_lrolQfd.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 51,
+  "fields": {
+    "name": "Донер полтора",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner4_GimKrMZ.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 52,
+  "fields": {
+    "name": "Cola",
+    "price": "230.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola_3DVgPaV.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 53,
+  "fields": {
+    "name": "Pepsi",
+    "price": "230.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_pepsi_hZaRWhm.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 54,
+  "fields": {
+    "name": "Red Bull",
+    "price": "550.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_redbull.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 55,
+  "fields": {
+    "name": "Lipton",
+    "price": "180.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_lipton_2UrUpaz.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 56,
+  "fields": {
+    "name": "Фри",
+    "price": "200.00",
+    "category": "fastfood",
+    "groupa": 5,
+    "image": "images/garnir_free.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 57,
+  "fields": {
+    "name": "Соус барбекью",
+    "price": "220.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_barbeque_205VJdS.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 58,
+  "fields": {
+    "name": "Соус томатный",
+    "price": "200.00",
+    "category": "fastfood",
+    "groupa": 6,
+    "image": "images/sauce_tomato_3b3GYC3.jpeg",
+    "partner": 7
+  }
+},
+{
+  "model": "product.product",
+  "pk": 59,
+  "fields": {
+    "name": "Донер",
+    "price": "1300.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner4_EPRUEHV.jpeg",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 60,
+  "fields": {
+    "name": "Донер полтора",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner2_6SMEjLr.webp",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 61,
+  "fields": {
+    "name": "Донер куринный",
+    "price": "1000.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner3_3u5YE6B.jpeg",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 62,
+  "fields": {
+    "name": "Донер куринный полтора",
+    "price": "1500.00",
+    "category": "fastfood",
+    "groupa": 2,
+    "image": "images/doner1_bUhubiG.jpeg",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 63,
+  "fields": {
+    "name": "Лимонад",
+    "price": "200.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_limon.webp",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 64,
+  "fields": {
+    "name": "Лимонад Мохито",
+    "price": "350.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/blank.jpg",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 65,
+  "fields": {
+    "name": "Наггетсы",
+    "price": "1300.00",
+    "category": "fastfood",
+    "groupa": 5,
+    "image": "images/garnir_naggets2.jpeg",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 66,
+  "fields": {
+    "name": "Сэндвич куринный",
+    "price": "0.00",
+    "category": "fastfood",
+    "groupa": 8,
+    "image": "images/sandwich_chicken.jpeg",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 67,
+  "fields": {
+    "name": "Клаб сэндвич",
+    "price": "1400.00",
+    "category": "fastfood",
+    "groupa": 8,
+    "image": "images/sandwich_club.jpeg",
+    "partner": 8
+  }
+},
+{
+  "model": "product.product",
+  "pk": 68,
+  "fields": {
+    "name": "Бургер Black",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_black_tI5U0KJ.jpeg",
+    "partner": 9
+  }
+},
+{
+  "model": "product.product",
+  "pk": 69,
+  "fields": {
+    "name": "Бургер Double Halapenjo",
+    "price": "2900.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_double_lJlKmbH.jpeg",
+    "partner": 9
+  }
+},
+{
+  "model": "product.product",
+  "pk": 70,
+  "fields": {
+    "name": "Бургер вегетерианский",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_vegan_21F3g5a.jpeg",
+    "partner": 9
+  }
+},
+{
+  "model": "product.product",
+  "pk": 71,
+  "fields": {
+    "name": "Cola",
+    "price": "160.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola_6yvmaue.jpeg",
+    "partner": 9
+  }
+},
+{
+  "model": "product.product",
+  "pk": 72,
+  "fields": {
+    "name": "Лимонад",
+    "price": "170.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_lemonad.jpeg",
+    "partner": 9
+  }
+},
+{
+  "model": "product.product",
+  "pk": 73,
+  "fields": {
+    "name": "Салат Цезарь",
+    "price": "1300.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/blank.jpg",
+    "partner": 9
+  }
+},
+{
+  "model": "product.product",
+  "pk": 74,
+  "fields": {
+    "name": "Салат Оливье",
+    "price": "990.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/salad_oliviye.jpeg",
+    "partner": 9
+  }
+},
+{
+  "model": "product.product",
+  "pk": 75,
+  "fields": {
+    "name": "Бургеры вегетерианский",
+    "price": "1000.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_vegan_1iuFP5k.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 76,
+  "fields": {
+    "name": "Бургер Black",
+    "price": "1200.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_black_iMVqSVn.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 77,
+  "fields": {
+    "name": "Бургер Double Halapenjo",
+    "price": "2700.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_Halapenjo_MBwKuyY.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 78,
+  "fields": {
+    "name": "Бургер куринный",
+    "price": "1500.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_chicken_UUV7EeR.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 79,
+  "fields": {
+    "name": "Сок апельсиновый",
+    "price": "800.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_orange_juice_vPtHfyP.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 80,
+  "fields": {
+    "name": "Cola",
+    "price": "200.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola_WtBPQMs.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 81,
+  "fields": {
+    "name": "Fanta",
+    "price": "200.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_fanta_QqvvaZl.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 82,
+  "fields": {
+    "name": "Lipton",
+    "price": "230.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_lipton_l6wQ8Bl.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 83,
+  "fields": {
+    "name": "Стрипсы",
+    "price": "800.00",
+    "category": "fastfood",
+    "groupa": 5,
+    "image": "images/garnir_strips.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 84,
+  "fields": {
+    "name": "Фри",
+    "price": "600.00",
+    "category": "fastfood",
+    "groupa": 5,
+    "image": "images/garnir_free_Dg8JGfT.jpeg",
+    "partner": 10
+  }
+},
+{
+  "model": "product.product",
+  "pk": 85,
+  "fields": {
+    "name": "Бургер Double Halapenjo",
+    "price": "2350.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_double_PtCNn5m.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 86,
+  "fields": {
+    "name": "Бургер Афро-Казахстанец",
+    "price": "1850.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_black_g2PTdW3.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 87,
+  "fields": {
+    "name": "Бургеры веган",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 8,
+    "image": "images/sandwich_club_22cUbKd.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 88,
+  "fields": {
+    "name": "Сэндвич",
+    "price": "1950.00",
+    "category": "fastfood",
+    "groupa": 8,
+    "image": "images/sandwich_chicken_gzgBR0v.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 89,
+  "fields": {
+    "name": "Сэндвич с тунцом",
+    "price": "2400.00",
+    "category": "fastfood",
+    "groupa": 8,
+    "image": "images/sandwich_tuna.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 90,
+  "fields": {
+    "name": "Пицца Пепперони",
+    "price": "2000.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_pepperoni_pBKTd7m.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 91,
+  "fields": {
+    "name": "Пицца Моцарелла",
+    "price": "2300.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_mozzarella_5MK2ypq.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 92,
+  "fields": {
+    "name": "Сок апельсиновый",
+    "price": "700.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_orange_juice_DYDYQ2f.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 93,
+  "fields": {
+    "name": "Lipton",
+    "price": "300.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_lipton_FfVI59O.jpeg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 94,
+  "fields": {
+    "name": "Лимонад",
+    "price": "2500.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/blank.jpg",
+    "partner": 11
+  }
+},
+{
+  "model": "product.product",
+  "pk": 95,
+  "fields": {
+    "name": "Пицца Маргарита",
+    "price": "1200.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_margarita_xRMt88g.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 96,
+  "fields": {
+    "name": "Пицца Пепперони",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_pepperoni_fxPTBn5.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 97,
+  "fields": {
+    "name": "Пицца Моцарелла",
+    "price": "2800.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_mozzarella_HfhSx7E.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 98,
+  "fields": {
+    "name": "Пицца Салями",
+    "price": "2200.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_salyami_mhw9iRa.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 99,
+  "fields": {
+    "name": "Пицца Сицилиана",
+    "price": "2900.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_siciliana_YBON0Mx.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 100,
+  "fields": {
+    "name": "Салат Цезарь",
+    "price": "850.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/salad_caesar_ShavS1C.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 101,
+  "fields": {
+    "name": "Салат кукурузный",
+    "price": "0.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/salad_corn_hcl3LmC.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 102,
+  "fields": {
+    "name": "Сок апельсиновый",
+    "price": "500.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_orange_juice_qeeZE7d.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 103,
+  "fields": {
+    "name": "Lipton",
+    "price": "250.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_lipton_UdjqsDQ.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 104,
+  "fields": {
+    "name": "Лимонад Мохито",
+    "price": "700.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_mohito_IkSAL8A.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 105,
+  "fields": {
+    "name": "Red Bull",
+    "price": "850.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_redbull_5krhvEg.jpeg",
+    "partner": 12
+  }
+},
+{
+  "model": "product.product",
+  "pk": 106,
+  "fields": {
+    "name": "Пицца Пепперони",
+    "price": "1500.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_pepperoni_s5fSyuQ.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 107,
+  "fields": {
+    "name": "Пицца Маргарита",
+    "price": "1500.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_margarita_7eNhwii.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 108,
+  "fields": {
+    "name": "Пицца Моцарелла",
+    "price": "1700.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_mozzarella_s5KZijh.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 109,
+  "fields": {
+    "name": "Пицца Салями",
+    "price": "1600.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_salyami_t74YnDR.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 110,
+  "fields": {
+    "name": "Пицца с морепродуктами",
+    "price": "2000.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_siciliana_OYBF51M.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 111,
+  "fields": {
+    "name": "Cola",
+    "price": "180.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_cola_vp4qQSP.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 112,
+  "fields": {
+    "name": "Fanta",
+    "price": "180.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_fanta_xn0Wryk.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 113,
+  "fields": {
+    "name": "Sprite",
+    "price": "180.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_sprite_FLTf7Vx.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 114,
+  "fields": {
+    "name": "Лимонад",
+    "price": "300.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_limon..webp",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 115,
+  "fields": {
+    "name": "Пицца Пепперони",
+    "price": "1800.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_pepperoni_eYnycKz.jpeg",
+    "partner": 13
+  }
+},
+{
+  "model": "product.product",
+  "pk": 116,
+  "fields": {
+    "name": "Пицца Маргарита",
+    "price": "1700.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_margarita_zCfyIwG.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 117,
+  "fields": {
+    "name": "Пицца Моцарелла",
+    "price": "2300.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_mozzarella_7dtKWHH.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 118,
+  "fields": {
+    "name": "Пицца Салями",
+    "price": "2000.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_salyami_5qNK4EH.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 119,
+  "fields": {
+    "name": "Пицца Сицилиана",
+    "price": "2300.00",
+    "category": "fastfood",
+    "groupa": 3,
+    "image": "images/pizza_siciliana_3Jkw1tE.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 120,
+  "fields": {
+    "name": "Салат Цезарь",
+    "price": "800.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/salad_caesar_SypXJz3.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 121,
+  "fields": {
+    "name": "Салат кукурузный",
+    "price": "700.00",
+    "category": "fastfood",
+    "groupa": 7,
+    "image": "images/salad_corn_ioIE3pa.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 122,
+  "fields": {
+    "name": "Сок апельсиновый",
+    "price": "500.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_orange_juice_1ztXGtp.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 123,
+  "fields": {
+    "name": "Лимонад Мохито",
+    "price": "700.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_mohito_nppXx3b.jpeg",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 124,
+  "fields": {
+    "name": "Лимонад",
+    "price": "550.00",
+    "category": "fastfood",
+    "groupa": 4,
+    "image": "images/beverage_limon._RRH1ZWf.webp",
+    "partner": 14
+  }
+},
+{
+  "model": "product.product",
+  "pk": 125,
+  "fields": {
+    "name": "Чебуреки домашние",
+    "price": "400.00",
+    "category": "fastfood",
+    "groupa": 9,
+    "image": "images/1156_0128caz_9224_1024.jpg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 131,
+  "fields": {
+    "name": "Бургер куринный",
+    "price": "600.00",
+    "category": "fastfood",
+    "groupa": 1,
+    "image": "images/Burger_chicken_nbQ3wMW.jpeg",
+    "partner": 2
+  }
+},
+{
+  "model": "product.product",
+  "pk": 133,
+  "fields": {
+    "name": "Сэндвич с тунцом",
+    "price": "700.00",
+    "category": "fastfood",
+    "groupa": 8,
+    "image": "images/sandwich_tuna_5tKXpYx.jpeg",
+    "partner": 2
+  }
+}
+]

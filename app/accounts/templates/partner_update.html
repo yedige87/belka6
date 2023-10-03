@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+
+{% block title %} Редактировать пользователя {% endblock %}
+{% block menu %}
+    <a href="{% url 'profile' user_obj.pk %}"> Назад </a>
+{% endblock %}
+{% block content %}
+    <h3> Поменять личные данные пользователя {{user_obj.username}}</h3>
+
+{% if profile_owner.user_type == 'partners' %}
+    <img src="{{ profile_owner.avatar.url }}" height="auto" width="500">
+{% endif %}
+
+    <form action="{% url 'partner_update' user_obj.pk %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input class="btn btn-primary" type="submit" value="Сохранить">
+        <a href="{% url 'profile' user_obj.pk %}" class="btn btn-primary">Отменить</a>
+    </form>
+
+{% endblock %}

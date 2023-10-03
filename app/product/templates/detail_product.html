@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% block title %}
+    <p>Продукт: {{ product.name }}</p>
+{% endblock %}
+
+{% block content %}
+<br/>
+<img src="{{ product.image.url }}" height="auto" width="500"> <br/>
+<p> <b> Наименование: </b> {{ product.name }}</p>
+<p> <b> Цена: </b> {{ product.price }} KZT</p>
+<p> <b> Категория: </b> {{ product.groupa }}</p>
+
+<!--user - текущий авторизованный пользователь, product.partner.id - владелец продукта-->
+{% if user.id == product.partner.id %}
+<a href="{% url 'delete_product' product.pk %}" class="btn btn-danger">Удалить</a>
+<a href="{% url 'update_product' product.pk %}" class="btn btn-primary">Редактировать</a>
+{% endif %}
+
+
+{% endblock %}
+
+
+

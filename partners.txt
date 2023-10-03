@@ -1,0 +1,13 @@
+
+1. Mr. Doner, phone = 111, 
+2. Istanbul Doner, phone = 112
+3. Turkish Doner, phone = 113
+4. Донерная № 1, phone = 114
+5. Mahandi, phone = 115,
+6. Burger Murger, phone = 116
+7. Burger Club, phone = 117
+8. Fastfood Almaty = 118
+9. Pizza house, phone = 119
+10. Italian pizza = 120
+11. Venezia = 121
+12. Little Sicilia = 122

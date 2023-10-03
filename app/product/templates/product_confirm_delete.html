@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block title %}Product confirm delete{% endblock %}
+
+{% block menu %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Вы действительно хотите удалить продукт?</h1>
+        <p>
+            <img src="{{ product.image.url }}" height="auto" width="500">
+        </p>
+    <p>Наименование: {{ product.name }}</p>
+    <p>Цена: {{ product.price }}</p>
+
+        <form action="{% url 'confirm_delete' product.pk %}" method="post">
+            {% csrf_token %}
+            <p><input class="btn btn-danger" type="submit" value="Удалить"></p>
+            <p><a href="{% url 'detail_product' product.pk %}" class="btn btn-primary">Отмена</a></p>
+        </form>
+    </div>
+{% endblock %}

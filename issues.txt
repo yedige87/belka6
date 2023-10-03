@@ -1,0 +1,1668 @@
+
+
+Этап 1
+
+
+Создаем рабочую директорию (Belka), в которой создаем виртуальные окружение.
+
+В рабочей директории создаем зависимости:
+
+>> pip install django
+>> pip install django_bootstrap5
+>> pip install psycopg2-binary
+>> pip install pillow
+>> brew install libjpeg
+
+Записываем все зависимости в файл requirements:
+>> pip freeze > requirements.txt
+
+В app/settings регистрируем библиотеку django_bootstrap5 и приложения, изменяем все необходимые разделы под нужды своего проекта.
+
+***********************************************************************************************
+
+Этап 2
+
+В рабочей директории создаем проект 'app':
+
+>> django-admin startproject app (создается ядро проекта)
+
+
+Переходим в директорию ядра проекта:
+>> cd app
+
+В ядре проекта (директория app) для создания пользователей создаем приложение 'accounts':
+>> python3 manage.py startapp accounts
+
+
+В ядре проекта (директория app) для создания пользователей создаем приложение 'product':
+
+>> python3 manage.py startapp product
+
+
+В файле app/urls.py регистрируем пути всех приложений:
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('auth/', include('accounts.urls')),
+    path('', include('product.urls')),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+В файле product/urls.py добавляем путь для просмотра домашней страницы:
+
+from django.urls import path
+
+from product.views import HomePageView
+
+urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
+]
+
+
+
+В файле product/views.py создаем представление для перехода на домашнюю страницу:
+
+class HomePageView(ListView):
+    model = Account
+    template_name = 'index.html'
+    context_object_name = 'accounts'
+
+***********************************************************************************************
+
+Этап 3
+
+В файле accounts/models.py создаем модель Account для возможности создания клиентов и партнеров.
+
+class Account(AbstractUser):
+    username = models.CharField(
+        max_length=30,
+        blank=False,
+        null=False,
+        unique=True
+    )
+    first_name = models.CharField(
+        max_length=150,
+        null=False,
+        blank=False,
+        verbose_name='Имя',
+        default='No_name'
+    )
+    last_name = models.CharField(
+        max_length=150,
+        null=False,
+        blank=False,
+        verbose_name='Фамилия',
+        default='No_name'
+    )
+    email = models.EmailField(
+        verbose_name='Электронная почта',
+        unique=True,
+        blank=False,
+        null=False
+    )
+    user_type = models.CharField(
+        verbose_name='Тип пользователя',
+        choices=UserTypeChoice.choices,
+        max_length=250,
+        default=UserTypeChoice.CLIENT
+    )
+    phone = models.CharField(
+        max_length=11,
+        null=False,
+        blank=False,
+        unique=True,
+        verbose_name='Телефон'
+    )
+    avatar = models.ImageField(
+        null=True,
+        blank=True,
+        upload_to='user_pic',
+        verbose_name='Аватар',
+        default='user_pic/blank.jpg'
+    )
+    partner_category = models.CharField(
+        verbose_name='Тип пользователя',
+        choices=PartnerCategoryChoice.choices,
+        max_length=250
+    )
+
+    objects = AccountManager()
+
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.username
+
+
+В приложении accounts создаем файл managers, в котором для создания пользователей и суперпользователя создаем класс AccountManager:
+
+from django.contrib.auth.models import UserManager
+
+
+class AccountManager(UserManager):
+
+    def create_user(self, email=None, password=None, **kwargs):
+        if not email:   # не работает, т.к. поле и так обязательное для заполнения
+            raise ValueError('Users must have an Email')
+
+        user = self.model(
+            email=email, **kwargs)
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email=None, password=None, **kwargs):
+        user = self.create_user(
+            email,
+            password=password
+        )
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+
+Согласно техническому заданию имеется 2 типа пользователя - Клиент и Партнер, также при регистрации пользователя в качестве Партнера он должен иметь возможность выбора категории своего заведения. Соответственно необходимо создать файл choices.py для возможности выбора пользователя при его создании и выбора категории заведения если пользователь - Партнер:
+
+
+from django.db.models import TextChoices
+
+
+class UserTypeChoice(TextChoices):
+    CLIENT = 'clients', 'Клиент'
+    PARTNER = 'partners', 'Партнер'
+
+
+class PartnerCategoryChoice(TextChoices):
+    RESTAURANT = 'restaurant', 'ресторан'
+    PHARMACY = 'pharmacy', 'аптека'
+    SUPERMARKET = 'supermarket', 'супермаркет'
+
+
+!!! Так как для регистрации/входа пользователя сделаны отдельные кнопки для Партнера и Клиента, то выбор типа пользователя для Клиента осуществляется по умолчанию в самой модели, а тип Партнера определяется по не пустому полю 'first_name' и устанавливается в файле accounts/views.py (см. def add_user_to_group)
+
+
+Создаем миграции
+
+Создаем суперпользователя
+
+
+Регистрируем модель Account в админ-панели и добавляем нужные нужные поля и разделы:
+
+В файле accounts/admin.py:
+
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'id', 'user_type', 'email', 'phone', 'avatar')
+    list_filter = ('username', 'id', 'user_type', 'first_name', 'last_name', 'email', 'phone', 'avatar')
+    search_fields = ('username', 'id', 'user_type', 'first_name', 'last_name', 'email', 'phone', 'avatar')
+    readonly_fields = ('id',)
+    fieldsets = (
+        (None, {"fields": ('username', 'user_type', 'first_name', 'last_name', 'email', 'phone', 'avatar', "password")}),
+        ("Permissions", {"fields": ("is_staff", "is_active", "groups", "user_permissions")}),
+    )
+
+
+admin.site.register(Account, AccountAdmin)
+
+
+!!!
+Заходим в Админ-панель через суперюзера. В разделе Groups создаем следующие группы:
+
+A. admin - которая имеет все права для работы с БД
+
+B. partners - которая имеет все права для работы с таблицей Product
+
+C. clients - которая имеет права на просмотр из таблицы Product
+
+
+***********************************************************************************************
+
+Этап 4
+
+На уровне manage.py создаем каталог uploads (BASE_DIR) в котором создаем каталоги images и user_pic
+
+На уровне manage.py создаем каталог templates (BASE_DIR) в котором создаем шаблоны base.html и index.html.
+
+Base.html:
+
+<!DOCTYPE html>
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap5/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="nav-line">
+        <div class="container">
+
+            <nav class="navbar">
+
+                {% if not user.is_authenticated %}
+                    <a class="btn btn-primary" href="{% url 'client_register' %}"> Вход для клиента </a> &nbsp
+                    <a class="btn btn-primary" href="{% url 'partner_register' %}"> Вход для партнера </a> &nbsp
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'home' %}"> На главную </a> &nbsp
+                    <a class="btn btn-primary" href="{% url 'profile' user.pk %}"> Кабинет </a> &nbsp
+                    <a class="btn btn-primary" href="{% url 'logout' %}">Выход</a> &nbsp
+                {% endif %}
+
+
+
+                {% block menu %}{% endblock %}
+
+            </nav>
+
+                {% block content %}{% endblock %}
+
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+Index.html:
+
+{% extends 'base.html' %}
+
+
+{% block menu %}
+
+{% if user.is_authenticated %}
+    <span>Ваш логин: {{ user.username }}</span>
+{% else %}
+    <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+{% endblock %} 
+
+
+***********************************************************************************************
+
+Этап 5
+
+Так как регистрация Клиентов и Партнеров осуществляется раздельно, и имеет разные формы, то в accounts/templates для них создаются отдельные шаблоны.
+
+Для Клиента:
+
+1. Создаем client_register.html:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h3>Регистрация клиента</h3>
+
+        <p>Уже зарегистрированы?
+            <a href="{% url 'login' %}">Войти</a>
+        </p>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="form square-inputs">
+                {% csrf_token %}
+                {% bootstrap_form form show_placeholder=False %}
+
+            </div>
+            <div class="form_row">
+                {% bootstrap_button button_type="submit" content='Регистрация' button_class="btn btn-primary" %}
+                <a href="{% url 'home' %}" class="btn btn-primary">Отмена</a>
+            </div>
+        </form>
+{% endblock %}
+
+
+
+2. Cоздаем accounts/urls.py:
+
+
+urlpatterns = [
+	path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+]
+
+
+
+3. Создаем accounts/views.py:
+
+class ClientRegisterView(CreateView):
+    template_name = 'client_register.html'
+    form_class = ClientCreationForm
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            appuser = form.save()
+            appuser.save()
+            login(request, appuser)
+            group = Group.objects.get(name='clients')	# получаем объект группы clients
+            appuser.groups.add(group)			# текущего пользователя добавляем в эту группу
+            return redirect(self.success_url)
+        context = {'form': form}
+        return self.render_to_response(context)
+
+
+4. Создаем accounts/forms.py:
+
+class ClientCreationForm(forms.ModelForm):
+    password = forms.CharField(label='Пароль', strip=False, required=True, widget=forms.PasswordInput)
+    password_confirm = forms.CharField(label='Подтверждение пароля', strip=False, required=True, widget=forms.PasswordInput)
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email', 'phone', 'password', 'password_confirm')
+        labels = {
+            'username': 'Логин',
+            'email': 'Эл. почта',
+            'phone': 'Телефон',
+            'password': 'Пароль',
+            'password_confirm': 'Подтверждение пароля'
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError('Пароли не совпадают')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data.get('password'))
+        if commit:
+            user.save()
+        return user
+
+
+Для Партнера:
+
+
+1. Создаем partner_register.html:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h3>Регистрация партнера</h3>
+
+        <p>Уже зарегистрированы?
+            <a href="{% url 'login' %}">Войти</a>
+        </p>
+        
+        <form method="post" enctype="multipart/form-data">
+            <div class="form square-inputs">
+                {% csrf_token %}
+                {% bootstrap_form form show_placeholder=False %}
+
+            </div>
+            <div class="form_row">
+                {% bootstrap_button button_type="submit" content='Регистрация' button_class="btn btn-primary" %}
+                <a href="{% url 'home' %}" class="btn btn-primary">Отмена</a>
+            </div>
+        </form>
+{% endblock %}
+
+
+
+2. Cоздаем accounts/urls.py:
+
+
+urlpatterns = [
+	path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+	path('accounts/partner/register', PartnerRegisterView.as_view(), name='partner_register'),
+]
+
+
+
+3. Создаем accounts/views.py:
+
+class PartnerRegisterView(CreateView):
+    template_name = 'partner_register.html'
+    form_class = PartnerCreationForm
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            appuser = form.save()
+	    appuser.user_type = 'partners'			# автоматически определяется тип пользователя при регистрации
+            appuser.save()
+            login(request, appuser)
+	    group = Group.objects.get(name='partners')		# получаем объект группы partners
+            appuser.groups.add(group)				# текущего пользователя добавляем в эту группу
+            return redirect(self.success_url)
+        context = {'form': form}
+        return self.render_to_response(context)
+
+
+
+===============================================================
+# закоменчено т.к. Сигнал post_save не используется
+
+# @receiver(post_save, sender=Account)
+# def add_user_to_group(sender, instance, created, **kwargs):
+#    if created:
+#        if instance.first_name != 'No_name':
+#            instance.user_type = 'partners'
+#        print(f'{instance.user_type = }')
+#        group = Group.objects.get(name=instance.user_type)  # Замените 'MyGroup' на имя вашей группы
+#        instance.groups.add(group)
+
+===============================================================
+
+
+4. Создаем accounts/forms.py:
+
+class PartnerCreationForm(forms.ModelForm):
+    password = forms.CharField(label='Пароль', strip=False, required=True, widget=forms.PasswordInput)
+    password_confirm = forms.CharField(label='Подтверждение пароля', strip=False, required=True, widget=forms.PasswordInput)
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email', 'phone', 'first_name', 'last_name', 'partner_category', 'password', 'password_confirm', 'avatar')
+        labels = {
+            'username': 'Логин',
+            'email': 'Эл. почта',
+            'phone': 'Телефон',
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'partner_category': 'Тип заведения',
+            'password': 'Пароль',
+            'password_confirm': 'Подтверждение пароля',
+            'avatar': 'Аватар',
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError('Пароли не совпадают')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data.get('password'))
+        if commit:
+            user.save()
+        return user
+
+
+
+
+После успешной регистрации пользователей, возникла необходимость автоматического включения его в соответствующую группу в админ-панели: clients или partners по признаку 'user_type' в модели Account. Так как для всех пользователей признак 'user_type' по умолчанию будет 'clients', то тип 'partners' будет определяться по наличию записи в поле 'first_name' или 'last_name' модели Acoount. Этот подход реализован при успешной регистрации пользователя с помощью сигнала 'post_save':
+
+
+В файле accounts/views.py:
+
+from django.contrib.auth.models import Group
+
+from django.db.models.signals import post_save
+
+from django.dispatch import receiver
+
+
+
+# Эта функция автоматически запускается по сигналу 'post_save' посредством декоратора @receiver
+
+
+@receiver(post_save, sender=Account)
+def add_user_to_group(sender, instance, created, **kwargs):
+    if created:
+        if instance.first_name:	# Если содержит запись (не пустое), то тип будет partners, так как у Клиента это поле всегда пустое
+            instance.user_type = 'partners'  # устанавливаем значение user_type как 'partners'
+        print(f'{instance.user_type = }')
+        group = Group.objects.get(name=instance.user_type)  # name = имени группы 'clients' или 'partners' и соответствует user_type
+        instance.groups.add(group)	# пользователю назначается соответствующая группа
+
+
+# instance - содержит в себе объект только что созданного пользователя 
+# created - признак: True - если пользователь создан успешно, иначе - False
+
+
+Чтобы срабатывал сигнал 'post_save' необходимо его активировать в файле accounts/apps.py или accounts/__init__.py путем введения следующей записи:
+
+default_app_config = 'accounts.apps.MyAppConfig' (внесена в файл accounts/__init__.py)
+
+
+***********************************************************************************************
+
+
+Этап 6
+
+Функционал для входа/выхода
+
+
+1. В accounts/templates создаем файл login.html:
+
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h3>Вход в систему</h3>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form square-inputs">
+                {% csrf_token %}
+                {% bootstrap_form form show_label=False %}
+            </div>
+            <div class="form_row">
+                {% bootstrap_button button_type="submit" content='Войти' button_class="btn btn-primary" %}
+                <a href="{% url 'home' %}" class="btn btn-primary">Отмена</a>
+            </div>
+        </form>
+{% endblock %}
+
+
+
+2. В accounts/urls.py:
+
+
+urlpatterns = [
+    path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+    path('accounts/partner/register', PartnerRegisterView.as_view(), name='partner_register'),
+    path('accounts/login', LoginView.as_view(), name='login'),
+    path('accounts/logout', LogoutView.as_view(), name='logout'),
+]
+
+
+3. В accounts/views.py:
+
+
+class LoginView(SuccessMessageMixin, TemplateView):
+    template_name = 'login.html'
+    form = LoginForm
+    success_message = 'Вы успешно зашли в систему'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form()
+        context = {'form': form}
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if not form.is_valid():
+            return redirect('login')
+
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        appuser = authenticate(request=request, username=username, password=password)
+
+        if not appuser:
+            return redirect('login')
+
+        # Login User(User)
+        login(request, appuser)
+
+        return redirect('home')
+
+
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('home')
+
+
+4. В accounts/forms.py:
+
+class LoginForm(forms.Form):
+    username = forms.CharField(required=True, label='Телефон', widget=forms.TextInput)
+    password = forms.CharField(required=True, label='Пароль', widget=forms.PasswordInput)
+
+
+
+
+Предварительная форма личного кабинета
+
+
+1. В accounts/templates создаем файл profile.html:
+
+
+{% extends 'base.html' %}
+
+{% block menu %}
+
+{% endblock %}
+
+
+{% block content %}
+<br/> <br/>
+
+{% if profile_owner.user_type == 'partners' %}
+    <img src="{{ profile_owner.avatar.url }}" height="auto" width="500">
+{% endif %}
+
+<h3>Личный кабинет пользователя: {{ profile_owner.username }}</h3> <br/> <br/>
+
+<h2> Избранное </h2>
+
+
+{% endblock %}
+
+
+
+2. В accounts/urls.py:
+
+urlpatterns = [
+    path('accounts/<int:pk>/profile', ProfileView.as_view(), name='profile'),
+    path('accounts/login', LoginView.as_view(), name='login'),
+    path('accounts/logout', LogoutView.as_view(), name='logout'),
+    path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+    path('accounts/partner/register', PartnerRegisterView.as_view(), name='partner_register'),
+
+]
+
+
+3. В accounts/views.py:
+
+
+class ProfileView(DetailView):
+    model = get_user_model()
+    template_name = 'profile.html'
+
+    def get(self, request, *args, **kwargs):
+        # print('Profile kwargs=', kwargs)
+        id = kwargs['pk']
+        CustUser = get_user_model()
+        profile_owner = CustUser.objects.get(pk=id) # для определения владельца страницы, чтобы постронний пользователь не мог пользоваться его функционалом
+        self.extra_context = {'profile_owner': profile_owner, 'products': Product.objects.all()}
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+
+
+***********************************************************************************************
+
+
+Этап 7
+
+Обновление профайла
+
+
+1. Смена пароля:
+
+
+a. В accounts/templates создаем файл change_password.html:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+
+
+{% block title %} Смена пароля {% endblock %}
+{% block menu %}
+    <a href="{% url 'profile' user_obj.pk %}">Назад</a>
+    {% if user.is_authenticated %}
+        <span>Ваш логин: {{ user.username }}</span>
+    {% else %}
+        <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+    <h3> Поменять пароль пользователя {{user_obj.username}}</h3>
+
+    <form action="{% url 'change_password' user_obj.pk %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Сохранить" class="btn btn-primary">
+        <a href="{% url 'profile' user_obj.pk %}" class="btn btn-primary">Отменить</a>
+    </form>
+
+{% endblock %}
+
+
+
+b. В accounts/urls.py:
+
+urlpatterns = [
+    path('accounts/<int:pk>/profile', ProfileView.as_view(), name='profile'),
+    path('accounts/login', LoginView.as_view(), name='login'),
+    path('accounts/logout', LogoutView.as_view(), name='logout'),
+    path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+    path('accounts/partner/register', PartnerRegisterView.as_view(), name='partner_register'),
+    path('accounts/<int:pk>/change_password', ChangePasswordView.as_view(), name='change_password'),
+]
+
+
+c. В accounts/views.py:
+
+class ChangePasswordView(UpdateView):
+    model = get_user_model()
+    form_class = AccountChangePasswordForm
+    template_name = 'change_password.html'
+    context_object_name = 'user_obj'
+    success_url = '/'
+
+
+
+d. В accounts/forms.py:
+
+class AccountChangePasswordForm(forms.ModelForm):
+    password = forms.CharField(label="Новый пароль", strip=False, widget=forms.PasswordInput)
+    password_confirm = forms.CharField(label="Подтвердите пароль", strip=False, widget=forms.PasswordInput)
+    old_password = forms.CharField(label="Старый пароль", strip=False, widget=forms.PasswordInput)
+
+    def clean_password_confirm(self):
+        password = self.cleaned_data.get("password")
+        password_confirm = self.cleaned_data.get("password_confirm")
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError('Пароли не совпадают!')
+        return password_confirm
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get('old_password')
+        if not self.instance.check_password(old_password):
+            raise forms.ValidationError('Старый пароль неправильный!')
+        return old_password
+
+    def save(self, commit=True):
+        appuser = self.instance
+        appuser.set_password(self.cleaned_data["password"])
+        if commit:
+            appuser.save()
+        return appuser
+
+    class Meta:
+        model = get_user_model()
+        fields = ['password', 'password_confirm', 'old_password']
+
+
+
+2. Изменение личных данных.
+
+
+Для Клиента:
+
+
+a. В accounts/templates создаем файл client_update.html:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+
+{% block title %} Редактировать пользователя {% endblock %}
+{% block menu %}
+    <a href="{% url 'profile' user_obj.pk %}"> Назад </a>
+{% endblock %}
+{% block content %}
+    <h3> Поменять личные данные пользователя {{user_obj.username}}</h3>
+
+    <form action="{% url 'client_update' user_obj.pk %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input class="btn btn-primary" type="submit" value="Сохранить">
+        <a href="{% url 'profile' user_obj.pk %}" class="btn btn-primary">Отменить</a>
+    </form>
+
+{% endblock %}
+
+
+b. В accounts/urls.py:
+
+urlpatterns = [
+    path('accounts/<int:pk>/profile', ProfileView.as_view(), name='profile'),
+    path('accounts/login', LoginView.as_view(), name='login'),
+    path('accounts/logout', LogoutView.as_view(), name='logout'),
+    path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+    path('accounts/partner/register', PartnerRegisterView.as_view(), name='partner_register'),
+    path('accounts/<int:pk>/change_password', ChangePasswordView.as_view(), name='change_password'),
+    path('accounts/<int:pk>/client_update', ClientUpdateView.as_view(), name='client_update'),
+]
+
+
+c. В accounts/views.py:
+
+class ClientUpdateView(UpdateView):
+    model = get_user_model()
+    form_class = ClientUpdateForm
+    template_name = 'client_update.html'
+    context_object_name = 'user_obj'
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.object.pk})
+
+
+d. В accounts/forms.py:
+
+class ClientUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email', 'phone')
+        labels = {
+            'username': 'Логин',
+            'email': 'Эл. почта',
+            'phone': 'Телефон',
+        }
+
+
+
+
+Для Партнера:
+
+
+a. В accounts/templates создаем файл partner_update.html:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+
+{% block title %} Редактировать пользователя {% endblock %}
+{% block menu %}
+    <a href="{% url 'profile' user_obj.pk %}"> Назад </a>
+{% endblock %}
+{% block content %}
+    <h3> Поменять личные данные пользователя {{user_obj.username}}</h3>
+
+{% if profile_owner.user_type == 'partners' %}
+    <img src="{{ profile_owner.avatar.url }}" height="auto" width="500">
+{% endif %}
+
+    <form action="{% url 'partner_update' user_obj.pk %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input class="btn btn-primary" type="submit" value="Сохранить">
+        <a href="{% url 'profile' user_obj.pk %}" class="btn btn-primary">Отменить</a>
+    </form>
+
+{% endblock %}
+
+
+
+b. В accounts/urls.py:
+
+urlpatterns = [
+    path('accounts/<int:pk>/profile', ProfileView.as_view(), name='profile'),
+    path('accounts/login', LoginView.as_view(), name='login'),
+    path('accounts/logout', LogoutView.as_view(), name='logout'),
+    path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+    path('accounts/partner/register', PartnerRegisterView.as_view(), name='partner_register'),
+    path('accounts/<int:pk>/change_password', ChangePasswordView.as_view(), name='change_password'),
+    path('accounts/<int:pk>/client_update', ClientUpdateView.as_view(), name='client_update'),
+    path('accounts/<int:pk>/partner_update', PartnerUpdateView.as_view(), name='partner_update'),
+]
+
+
+
+c. В accounts/views.py:
+
+class PartnerUpdateView(UpdateView):
+    model = get_user_model()
+    form_class = PartnerUpdateForm
+    template_name = 'partner_update.html'
+    context_object_name = 'user_obj'
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.object.pk})
+
+
+d. В accounts/forms.py:
+
+class PartnerUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email', 'phone', 'first_name', 'last_name', 'partner_category', 'avatar')
+        labels = {
+            'username': 'Логин',
+            'email': 'Эл. почта',
+            'phone': 'Телефон',
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'partner_category': 'Тип заведения',
+            'avatar': 'Аватар',
+        }
+
+***********************************************************************************************
+
+
+Этап 8
+
+Создание модели Product
+
+
+
+1. В файле models создаем модель Product:
+
+class Product(models.Model):
+    name = models.CharField(
+        max_length=30,
+        blank=False,
+        null=False
+    )
+    price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0.00,
+        verbose_name='Цена'
+    )
+    category = models.CharField(
+        verbose_name='Тип продукта',
+        choices=ProductCategoryChoice.choices,
+        max_length=100,
+        default=ProductCategoryChoice.FASTFOOD
+    )
+    groupa = models.ForeignKey(
+        Grouping,
+        null=True,
+        blank=True,
+        related_name='product',
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(
+        null=True,
+        blank=True,
+        upload_to='images',
+        verbose_name='Фото',
+        default='images/blank.jpg'
+    )
+    partner = models.ForeignKey(
+        to=get_user_model(),
+        null=True,
+        blank=True,
+        related_name='partner_products',
+        verbose_name='Товар партнера',
+        on_delete=models.CASCADE
+    )
+
+
+2. Создаем файл product/choices.py в котором:
+
+
+class ProductCategoryChoice(TextChoices):
+    FASTFOOD = 'fastfood', 'еда'
+    MEDICINES = 'medicines', 'лекарства'
+    FOOD = 'food', 'полуфабрикаты''
+
+
+3. В файле product/models.py добавляем еще 2 модели:
+
+	
+class Grouping(models.Model):		# для группировки продуктов
+    name = models.CharField(
+        max_length=30,
+        blank=False,
+        null=False
+    )
+    at_partner = models.ManyToManyField(
+        to=get_user_model(),
+        related_name='partner_groups',
+        verbose_name='Группы товаров',
+    )
+
+    def __str__(self):
+        return self.name
+
+
+
+
+4. В product/admin.py регистрируем модели в админ-панели:
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'category', 'groupa', 'image', 'partner')
+    list_filter = ('id', 'name', 'price', 'category', 'groupa', 'image', 'partner')
+    search_fields = ('id', 'name', 'price', 'category', 'groupa', 'image', 'partner')
+    readonly_fields = ('id',)
+
+
+class GroupingAdmin(admin.ModelAdmin):
+    list_display = ('name', 'at_partner')
+    list_filter = ('id', 'name', 'at_partner')
+    search_fields = ('id', 'name', 'at_partner')
+    readonly_fields = ('id',)
+
+
+admin.site.register(Product)
+admin.site.register(Grouping)
+
+
+***********************************************************************************************
+
+
+Этап 9
+
+Доработка личного кабинета пользователя:
+
+
+В accounts/templates/profile.html:
+
+
+{% extends 'base.html' %}
+
+{% block menu %}
+
+{% if profile_owner.id == user.id %}
+    <a class="btn btn-primary" href="{% url 'change_password' profile_owner.pk %}">Сменить пароль</a>
+    {% if profile_owner.user_type == 'clients' %}
+        <a class="btn btn-primary" href="{% url 'client_update' profile_owner.pk %}">Изменить личные данные</a>
+    {% else %}
+        <a class="btn btn-primary" href="{% url 'partner_update' profile_owner.pk %}">Изменить личные данные</a>
+        <a class="btn btn-primary" href="{% url 'add_product' %}">Добавить продукт</a> &nbsp
+    {% endif %}
+
+{% endif %}
+
+{% if user.is_authenticated %}
+    <span>Ваш логин: {{ user.username }}</span>
+{% else %}
+    <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+<br/> <br/>
+
+{% if profile_owner.user_type == 'partners' %}
+    <img src="{{ profile_owner.avatar.url }}" height="auto" width="500">
+{% endif %}
+
+<h3>Название заведения: {{ profile_owner.username }}</h3> <br/> <br/>
+
+{% if profile_owner.user_type == 'partners' %}
+
+<p>
+    <span> <b> Виды продуктов : </b> </span>
+    {% for groupa in profile_owner.partner_groups.all %}
+    <span>{{groupa.name}},</span>
+    {% endfor %}
+</p>
+
+    <h2> Ассортимент </h2>
+
+    {% if products %}
+        {% for product in profile_owner.partner_products.all %}
+            <a href="{% url 'detail_product' product.pk %}">
+                <img src="{{ product.image.url }}" height="200" width="300">
+                <p>Наименование: {{ product.name }}</p>
+                <p>Цена: {{ product.price }} KZT</p>
+            </a>
+
+        {% endfor %}
+    {% else %}
+        <p>Ассортимент пуст</p>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
+
+
+
+***********************************************************************************************
+
+
+Этап 10
+
+
+CRUD ДЛЯ МОДЕЛИ PRODUCT
+
+
+Создание функционала для возможности ДОБАВЛЕНИЯ продуктов.
+
+
+1. В приложении product создаем директорию templates, в которой создаем файл create_product.html:
+
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h3>Добавление продукта</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="form square-inputs">
+                {% csrf_token %}
+                {% bootstrap_form form show_placeholder=False %}
+            </div>
+
+            <div class="form_row">
+                {% bootstrap_button button_type="submit" content='Добавить' button_class="btn btn-primary" %}
+                <a href="{% url 'home' %}" class="btn btn-primary">Отмена</a>
+            </div>
+        </form>
+{% endblock %}
+
+
+2. В product/urls.py:
+
+
+from django.urls import path
+
+from product.views import HomePageView, CreateProductView
+
+urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
+    path('product/add_product', CreateProductView.as_view(), name='add_product'),
+
+]
+
+
+3. В product/views.py создаем представление для добавления продуктов:
+
+
+# создаем функцию partner2group для включения партнера в список конкретного элемента группы товаров. 
+
+def partner2group(id_group, id_partner):
+    group = Grouping.objects.get(pk=id_group)
+    partner = Account.objects.get(pk=id_partner)
+
+    if not partner in group.at_partner.all():
+        group.at_partner.add(partner)
+
+    return
+
+
+class CreateProductView(CreateView):
+    model = Product
+    template_name = 'create_product.html'
+    form_class = ProductForm
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            form.instance.user = request.user
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.partner = form.instance.user
+        self.object = form.save()
+        id_group = self.object.groupa_id
+        id_partner = self.object.partner_id
+        partner2group(id_group, id_partner)	# вызываем вышеуказанную функцию
+        return super().form_valid(form)
+
+
+
+===============================================================
+!!! Закомментировано
+
+# @receiver(post_save, sender=Product)
+# def add_user_to_product(sender, instance, created, **kwargs):
+#    if created:
+#        user = instance.user  # Пользователь, переданный в аргументах или контексте
+#        instance.at_partner.add(user)
+
+
+
+# В файле __init__.py добавляем сигнал для работы метода add_user_to_product:
+
+# default_app_config = 'product.apps.MyAppConfig' 
+!!!
+===============================================================
+
+
+
+4. В файле product/forms.py:
+
+class ProductForm(forms.ModelForm):
+
+    class Meta:
+        model = Product
+        fields = ('name', 'price', 'category', 'groupa', 'image')
+        labels = {
+            'name': 'Наименование продукта',
+            'price': 'Цена',
+            'category': 'Категория продукта',
+            'groupa': 'Группа',
+            'image': 'Фото',
+        }
+
+
+
+Создание функционала для возможности ПРОСМОТРА продуктов.
+
+1. В product/templates создаем файл detail_product.html в котором:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% block title %}
+    <p>Продукт: {{ product.name }}</p>
+{% endblock %}
+
+{% block content %}
+<br/>
+<img src="{{ product.image.url }}" height="auto" width="500"> <br/>
+<p> <b> Наименование: </b> {{ product.name }}</p>
+<p> <b> Цена: </b> {{ product.price }} KZT</p>
+<p> <b> Категория: </b> {{ product.groupa }}</p>
+
+<!--user - текущий авторизованный пользователь, product.partner.id - владелец продукта-->
+{% if user.id == product.partner.id %}
+<a href="{% url 'delete_product' product.pk %}" class="btn btn-danger">Удалить</a>
+<a href="{% url 'update_product' product.pk %}" class="btn btn-primary">Редактировать</a>
+{% endif %}
+
+
+
+2. В product/urls.py добавляем путь:
+
+urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
+    path('product/add_product', CreateProductView.as_view(), name='add_product'),
+    path('product/<int:pk>/detail_product', ProductDetailView.as_view(), name='detail_product'),
+	
+]
+
+
+3. В product/views.py создаем представление для детального просмотра продукта:
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'detail_product.html'
+    context_object_name = 'product'
+
+
+
+
+Создание функционала для возможности ИЗМЕНЕНИЯ продуктов.
+
+1. В product/templates создаем файл update_product.html в котором:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h3>Изменение продукта</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="form square-inputs">
+                {% csrf_token %}
+                {% bootstrap_form form show_placeholder=False %}
+            </div>
+
+            <div class="form_row">
+                {% bootstrap_button button_type="submit" content='Сохранить' button_class="btn btn-success" %}
+                <a href="{% url 'home' %}" class="btn btn-primary">Отмена</a>
+            </div>
+        </form>
+{% endblock %}
+
+
+
+2. В product/urls.py добавляем путь:
+
+urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
+    path('product/add_product', CreateProductView.as_view(), name='add_product'),
+    path('product/<int:pk>/detail_product', ProductDetailView.as_view(), name='detail_product'),
+    path('product/<int:pk>/update_product', ProductUpdateView.as_view(), name='update_product'),
+]
+
+
+3. В product/views.py создаем представление для изменения продукта:
+
+class ProductUpdateView(UpdateView):
+    template_name = 'update_product.html'
+    model = Product
+    form_class = ProductForm
+
+    def get_success_url(self):
+        return reverse('detail_product', kwargs={'pk': self.object.pk})
+
+
+
+
+Создание функционала для возможности УДАЛЕНИЯ продуктов.
+
+1. В product/templates создаем файл product_confirm_delete.html в котором:
+
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block title %}Product confirm delete{% endblock %}
+
+{% block menu %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Вы действительно хотите удалить продукт?</h1>
+        <p>
+            <img src="{{ product.image.url }}" height="auto" width="500">
+        </p>
+    <p>Наименование: {{ product.name }}</p>
+    <p>Цена: {{ product.price }}</p>
+
+        <form action="{% url 'confirm_delete' product.pk %}" method="post">
+            {% csrf_token %}
+            <p><input class="btn btn-danger" type="submit" value="Удалить"></p>
+            <p><a href="{% url 'detail_product' product.pk %}" class="btn btn-primary">Отмена</a></p>
+        </form>
+    </div>
+{% endblock %}
+
+
+2. В product/urls.py добавляем путь:
+
+urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
+    path('product/add_product', CreateProductView.as_view(), name='add_product'),
+    path('product/<int:pk>/detail_product', ProductDetailView.as_view(), name='detail_product'),
+    path('product/<int:pk>/update_product', ProductUpdateView.as_view(), name='update_product'),
+    path('product/<int:pk>/delete_product', ProductDeleteView.as_view(), name='delete_product'),
+    path('product/<int:pk>/confirm_delete/', ProductDeleteView.as_view(), name='confirm_delete'),
+]
+
+
+3. В product/views.py создаем представление для изменения продукта:
+
+class ProductDeleteView(DeleteView):
+    template_name = 'product_confirm_delete.html'
+    model = Product
+    success_url = reverse_lazy('home')
+    success_message = 'Продукт удален!'
+
+
+
+
+Для передачи группы продуктов типа (бургеры, донеры, пиццы) на шаблон главной страницы:
+
+
+1. В product/templates создаем шаблон foodgroup_partners.html для перехода (после нажатия на кнопку названия группы) на страницу, аналогичную Главной.
+
+{% extends 'base.html' %}
+
+
+{% block menu %}
+
+{% if user.is_authenticated %}
+    <span>Ваш логин: {{ user.username }}</span>
+{% else %}
+    <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if foodgroups %}<br/>
+    <h3>Наиболее популярные категории продуктов</h3><br/>
+    {% for group in foodgroups %}
+        <span>
+            <a href="{% url 'product_category' group.pk %}">
+                <button type="button" class="btn btn-outline-success">{{ group.name }}</button>
+            </a>
+        </span>
+
+
+    {% endfor %}
+{% endif %} <br/><br/>
+
+
+<h2>{{ group_name }}:</h2><br/>
+
+{% for partner in partners %}
+    {% if group_name in partner.partner_groups.all %}
+        <p> <br/>
+            <a href="{% url 'profile' partner.pk %}">
+                <img src="{{ partner.avatar.url }}" height="auto" width="500"> <br/>
+                {{ partner.username }}
+            </a>
+        </p>
+    {% endif %}
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+
+2. В product/urls.py добавляем путь:
+
+urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
+    path('product/add_product', CreateProductView.as_view(), name='add_product'),
+    path('product/<int:pk>/detail_product', ProductDetailView.as_view(), name='detail_product'),
+    path('product/<int:pk>/update_product', ProductUpdateView.as_view(), name='update_product'),
+    path('product/<int:pk>/delete_product', ProductDeleteView.as_view(), name='delete_product'),
+    path('product/<int:pk>/confirm_delete/', ProductDeleteView.as_view(), name='confirm_delete'),
+    path('product/<int:pk>/product_category', product_category, name='product_category'),
+]
+
+
+
+3. В файле product/views.py добавляем функцию product_category, с помощью которой передаем на шаблон объекты классов Account и Product:
+
+def product_category(request: WSGIRequest, pk):
+    partners = Account.objects.filter(user_type='partners')
+    foodgroups = Grouping.objects.all()
+    current_group = int(pk)
+    group_name = Grouping.objects.get(pk=current_group)
+    context = {'partners': partners, 'foodgroups': foodgroups, 'group_name': group_name}
+    return render(request, 'foodgroup_partners.html', context=context)
+
+
+
+
+***********************************************************************************************
+
+
+Этап 11
+
+
+Дорабатываем главную страницу:
+
+
+1. Изменяем шаблон главной страницы index.html:
+
+
+
+{% extends 'base.html' %}
+
+
+{% block menu %}
+
+{% if user.is_authenticated %}
+    <span>Ваш логин: <b>{{ user.username }}</b></span>
+{% else %}
+    <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if foodgroups %}<br/>
+    <h3>Наиболее популярные категории продуктов</h3><br/>
+    {% for group in foodgroups %}
+        <span>
+            <a href="{% url 'product_category' group.pk %}">
+                <button type="button" class="btn btn-outline-success">{{ group.name }}</button>
+            </a>
+        </span>
+
+    {% endfor %}
+{% endif %} <br/><br/>
+
+    {% for partner in partners %}
+
+            <p> <br/>
+                <a href="{% url 'profile' partner.pk %}">
+                    <img src="{{ partner.avatar.url }}" height="auto" width="500"> <br/>
+                    {{ partner.username }}
+                </a>
+            </p>
+    {% empty %}
+    <p>Список пользователей отсутствует!</p>
+    {% endfor %}
+
+
+{% endblock %}
+
+
+2. Вносим изменения в представление HomePageView(ListView):
+
+class HomePageView(ListView):
+    queryset = Account.objects.filter(user_type='partners')	# добавляем queryset фильтра пользователей по типу 'partners'
+    template_name = 'index.html'
+    context_object_name = 'partners'				# передаем объект на шаблон в качестве слова 'partners'
+    extra_context = {'foodgroups': Grouping.objects.all()}	# передаем объект класса Grouping (бургеры, донеры, пиццы и т.д.) на шаблон
+
+
+
+***********************************************************************************************
+
+
+Этап 12
+
+Создаем функционал для вывода групп товаров и вывода товаров по группам непосредственно на странице партнера
+
+
+1. Изменяем шаблон accounts/templates/profile.html:
+
+
+{% extends 'base.html' %}
+
+
+
+{% block menu %}
+
+{% if profile_owner.id == user.id %}
+    <a class="btn btn-primary" href="{% url 'change_password' profile_owner.pk %}">Сменить пароль</a>
+    {% if profile_owner.user_type == 'clients' %}
+        <a class="btn btn-primary" href="{% url 'client_update' profile_owner.pk %}">Изменить личные данные</a>
+    {% else %}
+        <a class="btn btn-primary" href="{% url 'partner_update' profile_owner.pk %}">Изменить личные данные</a>
+        <a class="btn btn-primary" href="{% url 'add_product' %}">Добавить продукт</a> &nbsp
+    {% endif %}
+
+{% endif %}
+
+{% if user.is_authenticated %}
+    <span>Ваш логин: {{ user.username }}</span>
+{% else %}
+    <span>Вы не зарегистрированы!</span>
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+<br/> <br/>
+
+{% if profile_owner.user_type == 'partners' %}
+    <img src="{{ profile_owner.avatar.url }}" height="auto" width="500">
+{% endif %}
+
+<h3>Название заведения: {{ profile_owner.username }}</h3> <br/> <br/>
+
+{% if profile_owner.user_type == 'partners' %}
+
+<p>
+    <span> <b> Виды продуктов : </b> </span>
+
+    <span>
+        <a href="{% url 'profile' profile_owner.pk %}">					# добавлена кнопка для показа всех типов продуктов
+            <button type="button" class="btn btn-outline-success">Все типы</button>
+        </a>
+    </span>
+
+    {% for groupa in profile_owner.partner_groups.all %}
+
+        <span>
+            <a href="{% url 'profile' profile_owner.pk groupa.pk %}">			# добавлена кнопка для показа всех типов продуктов
+                <button type="button" class="btn btn-outline-success">{{ groupa.name }}</button>
+            </a>
+        </span>
+
+    {% endfor %}
+</p>
+
+    <h2> Ассортимент </h2>
+
+    {% if profile_owner.partner_products.count > 0 %}				# если у партнера есть продукты, то в цикле печатаем их
+        {% for product in profile_owner.partner_products.all %}
+            {% if product.groupa_id == id_groupa or id_groupa == 0 %}		# если определена конкретная группа, печатаем по id группы, если id группы = 0, то печатаем все продукты (TRUE(1) or(+) FALSE(0) == TRUE(1)) | (TRUE(1) and(*) FALSE(0) == FALSE(0))  
+                <a href="{% url 'detail_product' product.pk %}">
+                    <img src="{{ product.image.url }}" height="200" width="300">
+                    <p>Наименование: {{ product.name }}</p>
+                    <p>Цена: {{ product.price }} KZT</p>
+                </a>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>Ассортимент пуст</p>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
+
+
+
+
+2. Изменения в accounts/urls.py
+
+
+from django.urls import path
+
+from accounts.views import LoginView, LogoutView, ClientRegisterView, PartnerRegisterView, ProfileView, \
+    ChangePasswordView, ClientUpdateView, PartnerUpdateView
+
+urlpatterns = [
+    path('accounts/<int:pk>/profile', ProfileView.as_view(), name='profile'),	# обрабатывает в случае передачи 1 параметра
+    path('accounts/login', LoginView.as_view(), name='login'),
+    path('accounts/logout', LogoutView.as_view(), name='logout'),
+    path('accounts/client/register', ClientRegisterView.as_view(), name='client_register'),
+    path('accounts/partner/register', PartnerRegisterView.as_view(), name='partner_register'),
+    path('accounts/<int:pk>/change_password', ChangePasswordView.as_view(), name='change_password'),
+    path('accounts/<int:pk>/client_update', ClientUpdateView.as_view(), name='client_update'),
+    path('accounts/<int:pk>/partner_update', PartnerUpdateView.as_view(), name='partner_update'),
+    path('accounts/<int:pk>/<int:groupa>/profile', ProfileView.as_view(), name='profile'),	# обрабатывает в случае передачи 2 параметров
+]
+
+
+
+
+3. Изменения в accounts/views.py --> ProfileView(DetailView)
+
+class ProfileView(DetailView):
+    model = get_user_model()
+    template_name = 'profile.html'
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs['pk']
+        groupa = kwargs.get('groupa')	# проверяем передался ли параметр groupa
+        if groupa:			# если группа передалась
+            groupa = kwargs['groupa']	# достаем id.groupa по ключу 'groupa'
+        else:				# если groupa == None
+            groupa=0			# тогда groupa присваиваем значение 0
+        CustUser = get_user_model()
+        profile_owner = CustUser.objects.get(pk=id) # для определения владельца страницы, чтобы постронний пользователь не мог пользоваться его функционалом
+        self.extra_context = {'profile_owner': profile_owner, 'id_groupa': groupa} # передаем id_groupa (id группы)
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+
+
+
+
+
+
